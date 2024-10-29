@@ -5,6 +5,11 @@ const session = require('express-session');
 const app = express();
 const PORT = 3000;
 
+app.use(express.static(__dirname));
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/main.html');
+});
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -15,6 +20,7 @@ app.use(session({
 
 // Almacenamiento de usuarios
 const users = {};
+
 
 // Ruta para el formulario de registro
 app.get('/register', (req, res) => {
@@ -65,9 +71,17 @@ app.post('/login', (req, res) => {
 
     if (users[username] && users[username] === password) {
         req.session.user = username;
-        res.send(`Bienvenido, ${username}!`);
+        res.redirect('/'); // Redirige a la página principal
     } else {
         res.send('Credenciales incorrectas. Inténtalo de nuevo.');
+    }
+});
+
+app.get('/user', (req, res) => {
+    if (req.session.user) {
+        res.json({ loggedIn: true, username: req.session.user });
+    } else {
+        res.json({ loggedIn: false });
     }
 });
 
