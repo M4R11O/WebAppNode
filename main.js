@@ -1,99 +1,81 @@
-const http = require('http');
-const fs = require('fs');
-const url = require('url');
-const querystring = require('querystring');
-const session = require('express-session'); // Necesitarás un paquete diferente para manejar sesiones sin Express
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 
+const app = express();
 const PORT = 3000;
+
+// Middleware para servir archivos estáticos
+app.use(express.static(__dirname));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'mi_secreto',
+    resave: false,
+    saveUninitialized: true
+}));
 
 // Almacenamiento de usuarios
 const users = {};
 
-// Crear un servidor HTTP
-const server = http.createServer((req, res) => {
-    const parsedUrl = url.parse(req.url, true);
-    const pathname = parsedUrl.pathname;
+// Ruta para el formulario de registro
+app.get('/register', (req, res) => {
+    res.sendFile(__dirname + '/pages/register.html');
+});
 
-    // Manejo de rutas
-    if (pathname === '/') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        fs.readFile('./pages/main.html', (err, data) => {
-            if (err) {
-                res.writeHead(404);
-                res.end('Página no encontrada');
-                return;
-            }
-            res.end(data);
-        });
-    } else if (pathname === '/register') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        fs.readFile('./pages/register.html', (err, data) => {
-            if (err) {
-                res.writeHead(404);
-                res.end('Página no encontrada');
-                return;
-            }
-            res.end(data);
-        });
-    } else if (pathname === '/login') {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        fs.readFile('./pages/login.html', (err, data) => {
-            if (err) {
-                res.writeHead(404);
-                res.end('Página no encontrada');
-                return;
-            }
-            res.end(data);
-        });
-    } else if (pathname === '/register' && req.method === 'POST') {
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString(); // Convertir Buffer a string
-        });
-        req.on('end', () => {
-            const { username, password } = querystring.parse(body);
+// Ruta para manejar el registro
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
 
-            if (users[username]) {
-                res.writeHead(400, { 'Content-Type': 'text/plain' });
-                return res.end('El usuario ya existe. Elige otro nombre de usuario.');
-            }
+    if (users[username]) {
+        return res.send('El usuario ya existe. Elige otro nombre de usuario.');
+    }
 
-            users[username] = password;
-            res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end(`Usuario ${username} registrado exitosamente! Puedes iniciar sesión ahora.`);
-        });
-    } else if (pathname === '/login' && req.method === 'POST') {
-        let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString(); // Convertir Buffer a string
-        });
-        req.on('end', () => {
-            const { username, password } = querystring.parse(body);
+    users[username] = password;
+    res.send(`Usuario ${username} registrado exitosamente! Puedes iniciar sesión ahora.`);
+});
 
-            if (users[username] && users[username] === password) {
-                // Aquí deberías manejar la sesión de manera diferente
-                res.writeHead(302, { Location: '/' });
-                res.end();
-            } else {
-                res.writeHead(401, { 'Content-Type': 'text/plain' });
-                res.end('Credenciales incorrectas. Inténtalo de nuevo.');
-            }
-        });
-    } else if (pathname === '/user') {
-        // Aquí deberías manejar la sesión de manera diferente
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ loggedIn: false })); // Cambia esto según tu lógica de sesión
-    } else if (pathname === '/logout') {
-        // Aquí deberías manejar la sesión de manera diferente
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end('Has cerrado sesión.'); // Cambia esto según tu lógica de sesión
+// Ruta para el formulario de login
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/pages/login.html');
+});
+
+// Ruta para manejar el login
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    if (users[username] && users[username] === password) {
+        req.session.user = username;
+        res.redirect('/');
     } else {
-        res.writeHead(404);
-        res.end('Página no encontrada');
+        res.send('Credenciales incorrectas. Inténtalo de nuevo.');
     }
 });
 
+// Ruta para verificar el estado del usuario
+app.get('/user', (req, res) => {
+    if (req.session.user) {
+        res.json({ loggedIn: true, username: req.session.user });
+    } else {
+        res.json({ loggedIn: false });
+    }
+});
+
+// Ruta para cerrar sesión
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.send('Error al cerrar sesión.');
+        }
+        res.send('Has cerrado sesión.');
+    });
+});
+
+// Ruta principal
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/pages/main.html');
+});
+
 // Iniciar el servidor
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
