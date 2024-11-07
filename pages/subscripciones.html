@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pago</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/tablero.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        input[type=text], input[type=password], input[type=number], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    
+<h2>Sistema de Pago</h2>
+
+<div class="container">
+    <form id="paymentForm">
+        <label for="cardName"><b>Nombre en la Tarjeta</b></label>
+        <input type="text" id="cardName" name="cardName" placeholder="Ingrese el nombre en la tarjeta" required>
+
+        <label for="cardNumber"><b>Número de Tarjeta</b></label>
+        <input type="text" id="cardNumber" name="cardNumber" placeholder="Ingrese el número de tarjeta" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+        <label for="expiryMonth"><b>Fecha de Expiración</b></label>
+        <select id="expiryMonth" name="expiryMonth" required>
+            <option value="">Mes</option>
+            <option value="01">Enero</option>
+            <option value="02">Febrero</option>
+            <option value="03">Marzo</option>
+            <option value="04">Abril</option>
+            <option value="05">Mayo</option>
+            <option value="06">Junio</option>
+            <option value="07">Julio</option>
+            <option value="08">Agosto</option>
+            <option value="09">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+        </select>
+        <select id="expiryYear" name="expiryYear" required>
+            <option value="">Año</option>
+            <script>
+                const currentYear = new Date().getFullYear();
+                for (let i = 0; i < 10; i++) {
+                    document.write(`<option value="${currentYear + i}">${currentYear + i}</option>`);
+                }
+            </script>
+        </select>
+
+        <label for="cvv"><b>CVV</b></label>
+        <input type="text" id="cvv" name="cvv" placeholder="Ingrese el CVV" maxlength="3" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+        <button type="submit">Pagar</button>
+        <div class="error" id="errorMessage"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita el envío del formulario
+
+        const cardNumber = document.getElementById('cardNumber').value;
+        const cvv = document.getElementById('cvv').value;
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Validar el número de tarjeta
+        if (cardNumber.length !== 16) {
+ errorMessage.textContent = "El número de tarjeta debe tener 16 dígitos.";
+            return;
+        }
+
+        // Validar el CVV
+        if (cvv.length !== 3) {
+            errorMessage.textContent = "El CVV debe tener 3 dígitos.";
+            return;
+        }
+
+        // Si todo es válido, puedes proceder con el envío del formulario
+        errorMessage.textContent = ""; // Limpiar mensajes de error
+        alert("Pago procesado con éxito."); // Aquí puedes agregar la lógica para procesar el pago
+        // this.submit(); // Descomentar para enviar el formulario si es necesario
+    });
+</script>

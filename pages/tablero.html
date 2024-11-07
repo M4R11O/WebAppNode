@@ -3,115 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Pago</title>
-    <link rel="stylesheet" href="../css/tablero.css">
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            padding: 20px;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        input[type=text], input[type=password], input[type=number], select {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-    </style>
+    <title>Panel de Control</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
+    <div class="container mt-5">
+        <!-- Header con título y botón agregar -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Panel de Control</h1>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarPersonaModal">
+                <i class="bi bi-plus-circle me-2"></i>Agregar Persona
+            </button>
+        </div>
 
-<h2>Sistema de Pago</h2>
+        <!-- Tabla de personas -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Horas Trabajadas</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaPersonas">
+                    <!-- Las filas se agregarán dinámicamente con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<div class="container">
-    <form id="paymentForm">
-        <label for="cardName"><b>Nombre en la Tarjeta</b></label>
-        <input type="text" id="cardName" name="cardName" placeholder="Ingrese el nombre en la tarjeta" required>
+    <!-- Modal para Agregar Persona -->
+    <div class="modal fade" id="agregarPersonaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Nueva Persona</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarPersona">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edad" required min="18" max="100">
+                        </div>
+                        <div class="mb-3">
+                            <label for="horas" class="form-label">Horas Trabajadas</label>
+                            <input type="number" class="form-control" id="horas" required min="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="agregarPersona()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <label for="cardNumber"><b>Número de Tarjeta</b></label>
-        <input type="text" id="cardNumber" name="cardNumber" placeholder="Ingrese el número de tarjeta" maxlength="16" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+    <!-- Modal para Editar Persona -->
+    <div class="modal fade" id="editarPersonaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Persona</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarPersona">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3">
+                            <label for="editNombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="editNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEdad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="editEdad" required min="18" max="100">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editHoras" class="form-label">Horas Trabajadas</label>
+                            <input type="number" class="form-control" id="editHoras" required min="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarEdicion()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <label for="expiryMonth"><b>Fecha de Expiración</b></label>
-        <select id="expiryMonth" name="expiryMonth" required>
-            <option value="">Mes</option>
-            <option value="01">Enero</option>
-            <option value="02">Febrero</option>
-            <option value="03">Marzo</option>
-            <option value="04">Abril</option>
-            <option value="05">Mayo</option>
-            <option value="06">Junio</option>
-            <option value="07">Julio</option>
-            <option value="08">Agosto</option>
-            <option value="09">Septiembre</option>
-            <option value="10">Octubre</option>
-            <option value="11">Noviembre</option>
-            <option value="12">Diciembre</option>
-        </select>
-        <select id="expiryYear" name="expiryYear" required>
-            <option value="">Año</option>
-            <script>
-                const currentYear = new Date().getFullYear();
-                for (let i = 0; i < 10; i++) {
-                    document.write(`<option value="${currentYear + i}">${currentYear + i}</option>`);
-                }
-            </script>
-        </select>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Array para almacenar las personas
+        let personas = [];
+        let nextId = 1;
 
-        <label for="cvv"><b>CVV</b></label>
-        <input type="text" id="cvv" name="cvv" placeholder="Ingrese el CVV" maxlength="3" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        // Función para agregar una nueva persona
+        function agregarPersona() {
+            const nombre = document.getElementById('nombre').value;
+            const edad = document.getElementById('edad').value;
+            const horas = document.getElementById('horas').value;
 
-        <button type="submit">Pagar</button>
-        <div class="error" id="errorMessage"></div>
-    </form>
-</div>
+            if (nombre && edad && horas) {
+                const persona = {
+                    id: nextId++,
+                    nombre: nombre,
+                    edad: parseInt(edad),
+                    horas: parseInt(horas)
+                };
 
-<script>
-    document.getElementById('paymentForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Evita el envío del formulario
-
-        const cardNumber = document.getElementById('cardNumber').value;
-        const cvv = document.getElementById('cvv').value;
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Validar el número de tarjeta
-        if (cardNumber.length !== 16) {
- errorMessage.textContent = "El número de tarjeta debe tener 16 dígitos.";
-            return;
+                personas.push(persona);
+                actualizarTabla();
+                
+                // Cerrar el modal y limpiar el formulario
+                const modal = bootstrap.Modal.getInstance(document.getElementById('agregarPersonaModal'));
+                modal.hide();
+                document.getElementById('formAgregarPersona').reset();
+            }
         }
 
-        // Validar el CVV
-        if (cvv.length !== 3) {
-            errorMessage.textContent = "El CVV debe tener 3 dígitos.";
-            return;
+        // Función para actualizar la tabla
+        function actualizarTabla() {
+            const tbody = document.getElementById('tablaPersonas');
+            tbody.innerHTML = '';
+
+            personas.forEach(persona => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${persona.id}</td>
+                    <td>${persona.nombre}</td>
+                    <td>${persona.edad}</td>
+                    <td>${persona.horas}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="verPersona(${persona.id})" title="Ver">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="editarPersona(${persona.id})" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarPersona(${persona.id})" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
-        // Si todo es válido, puedes proceder con el envío del formulario
-        errorMessage.textContent = ""; // Limpiar mensajes de error
-        alert("Pago procesado con éxito."); // Aquí puedes agregar la lógica para procesar el pago
-        // this.submit(); // Descomentar para enviar el formulario si es necesario
-    });
-</script>
+        // Función para ver detalles de una persona
+        function verPersona(id) {
+            const persona = personas.find(p => p.id === id);
+            if (persona) {
+                alert(`Detalles de ${persona.nombre}:\nEdad: ${persona.edad}\nHoras Trabajadas: ${persona.horas}`);
+            }
+        }
+
+        // Función para preparar la edición de una persona
+        function editarPersona(id) {
+            const persona = personas.find(p => p.id === id);
+            if (persona) {
+                document.getElementById('editId').value = persona.id;
+                document.getElementById('editNombre').value = persona.nombre;
+                document.getElementById('editEdad').value = persona.edad;
+                document.getElementById('editHoras').value = persona.horas;
+
+                const modal = new bootstrap.Modal(document.getElementById('editarPersonaModal'));
+                modal.show();
+            }
+        }
+
+        // Función para guardar los cambios de edición
+        function guardarEdicion() {
+            const id = parseInt(document.getElementById('editId').value);
+            const nombre = document.getElementById('editNombre').value;
+            const edad = document.getElementById('editEdad').value;
+            const horas = document.getElementById('editHoras').value;
+
+            const personaIndex = personas.findIndex(p => p.id === id);
+            if (personaIndex !== -1) {
+                personas[personaIndex] = {
+                    id: id,
+                    nombre: nombre,
+                    edad: parseInt(edad),
+                    horas: parseInt(horas)
+                };
+                actualizarTabla();
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editarPersonaModal'));
+                modal.hide();
+                document.getElementById('formEditarPersona').reset();
+            }
+        }
+
+        // Función para eliminar una persona
+        function eliminarPersona(id) {
+            if (confirm("¿Estás seguro de que quieres eliminar a esta persona?")) {
+                personas = personas.filter(p => p.id !== id);
+                actualizarTabla();
+            }
+        }
+    </script>
+</body>
+</html>
