@@ -1,0 +1,178 @@
+/* Estilos generales */
+body {
+    font-family: 'League Spartan', sans-serif;
+    background-color: #181818;
+    color: #f0f0f0;
+}
+
+/* Contenedor del formulario */
+.login-form {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos del título */
+.login-form h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Campos de entrada */
+.form-control {
+    background-color: #333333;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 0.75rem;
+}
+
+.form-control:focus {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #007bff;
+    box-shadow: none;
+}
+
+/* Texto de ayuda */
+.form-text {
+    color: #888888;
+}
+
+/* Botón de inicio de sesión */
+.btn-login {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem;
+}
+
+.btn-login:hover {
+    background-color: #0056b3;
+}
+
+/* Botones de Google y Facebook */
+.btn-online-light {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    font-weight: bold;
+    padding: 0.75rem;
+    border-radius: 5px;
+    flex-grow: 1;
+    margin: 0 0.5rem;
+}
+
+.btn-online-light:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Texto inferior */
+.text-center p, .text-center a {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.text-center a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    color: #007bff;
+}
+
+/* Ajustes de espaciado */
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+
+        /* Estilos adicionales para centrar el formulario */
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'League Spartan', sans-serif;
+            background-color: #181818;
+            color: #f0f0f0;
+        }
+
+        .login-container {
+            background-color: #1e1e1e;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .form-control {
+            background-color: #333333;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: 0.75rem;
+        }
+
+        .form-control:focus {
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #007bff;
+            box-shadow: none;
+        }
+
+        .btn-login {
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 0.75rem;
+        }
+
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-online-light {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            font-weight: bold;
+            padding: 0.75rem;
+            border-radius: 5px;
+            width: 48%;
+        }
+
+        .btn-online-light:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .text-center p, .text-center a {
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .text-center a {
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .text-center a:hover {
+            color: #007bff;
+        }

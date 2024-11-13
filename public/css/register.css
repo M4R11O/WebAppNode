@@ -1,0 +1,106 @@
+/* Estilos generales */
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'League Spartan', sans-serif;
+    background-color: #181818;
+    color: #f0f0f0;
+}
+
+/* Contenedor principal del formulario */
+.register-form {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+}
+
+/* Estilos de la imagen del logo */
+.logo-azure img {
+    max-width: 100px;
+    margin-bottom: 20px;
+}
+
+/* Estilos de encabezado y subtítulo */
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+}
+
+/* Estilos de los campos del formulario */
+.form-control {
+    background-color: #333333;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 0.75rem;
+}
+
+.form-control::placeholder {
+    color: #888888;
+}
+
+.form-control:focus {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #007bff;
+    box-shadow: none;
+}
+
+/* Estilos de los botones */
+.btn-cancel {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    font-weight: bold;
+    padding: 0.75rem;
+    border-radius: 5px;
+    width: 48%;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-online-light {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem;
+    width: 48%;
+}
+
+.btn-online-light:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para el texto y los enlaces */
+.text-center p, .text-center a {
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.text-center a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    color: #007bff;
+}
